@@ -1,4 +1,4 @@
-<p align="center">
+<p align="left">
      <img alt="A tool that helps you stay focused longer and boost your work productivity" src="/LLM-toolchain.jpg" width="500" />
 </p>
 
