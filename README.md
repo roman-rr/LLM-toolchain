@@ -18,8 +18,11 @@ A comprehensive toolchain for Large Language Models (LLMs) built on LangChain, p
 
 ## TODO NEXT
 - CI/DI: Dockerize 
-- CI/DI: Deploy to AWS/Azure
+- CI/DI: Deploy to AWS/Azure templates
 - Chains: Chat history
+= Chains: from langchain_core.documents import Document https://python.langchain.com/docs/tutorials/retrievers/
+- Chains: over SQL data
+- Agents https://python.langchain.com/docs/tutorials/agents/
 - RAG: similarity threshold for fallback answer
 - UI: Graphical Interface for documents uploading
 - 2 more Vector DB supports
@@ -43,6 +46,7 @@ A comprehensive toolchain for Large Language Models (LLMs) built on LangChain, p
 - Document loaders – https://python.langchain.com/docs/integrations/document_loaders/
 - Vector Stores - https://python.langchain.com/docs/integrations/vectorstores/
 - Retrievers – https://python.langchain.com/docs/integrations/retrievers/
+- Tutorials - https://python.langchain.com/docs/tutorials/
 
 ## Usage
 - `cd LLM-toolchain`
