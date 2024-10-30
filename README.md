@@ -23,11 +23,11 @@ A comprehensive toolchain for Large Language Models (LLMs) built on LangChain, p
 
 
 ## Useful docs
-Dashboard – https://smith.langchain.com/
-Models – https://python.langchain.com/docs/integrations/chat/
-Document loaders – https://python.langchain.com/docs/integrations/document_loaders/
-Vector Stores - https://python.langchain.com/docs/integrations/vectorstores/
-Retrievers – https://python.langchain.com/docs/integrations/retrievers/
+- Dashboard – https://smith.langchain.com/
+- Models – https://python.langchain.com/docs/integrations/chat/
+- Document loaders – https://python.langchain.com/docs/integrations/document_loaders/
+- Vector Stores - https://python.langchain.com/docs/integrations/vectorstores/
+- Retrievers – https://python.langchain.com/docs/integrations/retrievers/
 
 ## Usage
 - `cd LLM-toolchain`
