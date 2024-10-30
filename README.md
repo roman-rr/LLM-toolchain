@@ -17,12 +17,14 @@ A comprehensive toolchain for Large Language Models (LLMs) built on LangChain, p
 - **Evaluations**: Comprehensive evaluation framework for assessing model performance
 
 ## TODO NEXT
-- CI/DI: Kubernetes Docker deployment
+- CI/DI: Dockerize 
+- CI/DI: Deploy to AWS/Azure
 - Chains: Chat history
 - RAG: similarity threshold for fallback answer
 - UI: Graphical Interface for documents uploading
 - 2 more Vector DB supports
 - 2 more Document loaders
+- CI/DI: HELM + k8 deployments
 
 ## Components
 
