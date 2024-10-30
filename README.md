@@ -1,3 +1,8 @@
+<p align="center">
+     <img alt="A tool that helps you stay focused longer and boost your work productivity" src="/LLM-toolchain.jpg" width="500" />
+</p>
+
+
 # LLM Toolchain based on LangChain
 
 A comprehensive toolchain for Large Language Models (LLMs) built on LangChain, providing a flexible framework for document processing, retrieval-augmented generation (RAG), and model evaluation.
