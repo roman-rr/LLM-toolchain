@@ -16,6 +16,14 @@ A comprehensive toolchain for Large Language Models (LLMs) built on LangChain, p
 - **Experiments**: Integrated experiment tracking and evaluation using LangSmith
 - **Evaluations**: Comprehensive evaluation framework for assessing model performance
 
+## TODO NEXT
+- CI/DI: Kubernetes Docker deployment
+- Chains: Chat history
+- RAG: similarity threshold for fallback answer
+- UI: Graphical Interface for documents uploading
+- 2 more Vector DB supports
+- 2 more Document loaders
+
 ## Components
 
 - `rag_gpt_model_pdf_chain.py`: PDF document processing chain
