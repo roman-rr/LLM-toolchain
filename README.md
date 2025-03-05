@@ -16,18 +16,6 @@ A comprehensive toolchain for Large Language Models (LLMs) built on LangChain, p
 - **Experiments**: Integrated experiment tracking and evaluation using LangSmith
 - **Evaluations**: Comprehensive evaluation framework for assessing model performance
 
-## TODO NEXT
-- CI/DI: Dockerize 
-- CI/DI: Deploy to AWS/Azure templates
-- Chains: Chat history
-= Chains: from langchain_core.documents import Document https://python.langchain.com/docs/tutorials/retrievers/
-- Chains: over SQL data
-- Agents https://python.langchain.com/docs/tutorials/agents/
-- RAG: similarity threshold for fallback answer
-- UI: Graphical Interface for documents uploading
-- 2 more Vector DB supports
-- 2 more Document loaders
-- CI/DI: HELM + k8 deployments
 
 ## Components
 
@@ -51,7 +39,16 @@ A comprehensive toolchain for Large Language Models (LLMs) built on LangChain, p
 ## Usage
 - `cd LLM-toolchain`
 - `python3 -m venv venv`
-- `source myenv/bin/activate`
+- `source venv/bin/activate`
 - `pip install -r requirements.txt`
 
 Run any script with `python ...`
+
+## API Usage
+- `arc sandbox`
+
+## Deploy
+Using architect arc.codes
+- `arc deploy`
+- `arc deploy production`
+

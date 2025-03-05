@@ -1,0 +1,13 @@
+@env
+testing
+  OPENAI_API_KEY your-testing-key
+  LANGCHAIN_API_KEY your-testing-key
+  PINECONE_API_KEY your-testing-key
+staging
+  OPENAI_API_KEY your-staging-key
+  LANGCHAIN_API_KEY your-staging-key
+  PINECONE_API_KEY your-staging-key
+production
+  OPENAI_API_KEY your-production-key
+  LANGCHAIN_API_KEY your-production-key
+  PINECONE_API_KEY your-production-key
