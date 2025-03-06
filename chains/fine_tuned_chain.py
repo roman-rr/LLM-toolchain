@@ -2,6 +2,9 @@ from langchain_openai import ChatOpenAI
 from langchain.prompts import PromptTemplate
 from langchain_core.runnables import RunnableSequence
 
+from dotenv import load_dotenv
+load_dotenv()
+
 def create_chain():
     # Define your prompt
     prompt_template = PromptTemplate(

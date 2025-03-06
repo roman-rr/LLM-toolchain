@@ -12,6 +12,9 @@ from langchain.chains import create_retrieval_chain
 from langchain.chains.combine_documents import create_stuff_documents_chain
 from langchain_core.prompts import ChatPromptTemplate
 
+from dotenv import load_dotenv
+load_dotenv()
+
 def create_chain(file_path="./research.pdf"):
     loader = PyPDFLoader(file_path)
     with open("/dev/null", "w") as f, contextlib.redirect_stderr(f):
