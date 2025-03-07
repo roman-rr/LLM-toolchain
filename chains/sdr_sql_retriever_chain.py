@@ -2,12 +2,12 @@ import os
 import logging
 from typing import Optional, Dict, Any, List
 
-from langchain_openai import ChatOpenAI
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_community.utilities import SQLDatabase
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.callbacks import StdOutCallbackHandler
 
+from models.llms import get_openai_chat_model
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -39,8 +39,8 @@ def create_chain(db_uri: Optional[str] = None, table_names: Optional[List[str]] 
     
     # Create a model for generating SQL with a callback handler for logging
     callback_handler = StdOutCallbackHandler()
-    llm = ChatOpenAI(
-        model="gpt-4", 
+    llm = get_openai_chat_model(
+        model_name="gpt-4", 
         temperature=0,
         callbacks=[callback_handler],
         max_tokens=1000

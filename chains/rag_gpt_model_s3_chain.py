@@ -1,12 +1,12 @@
 import os
-from langchain_openai import ChatOpenAI, OpenAIEmbeddings
-from langchain_core.vectorstores import InMemoryVectorStore
 from langchain.chains import create_retrieval_chain
 from langchain.chains.combine_documents import create_stuff_documents_chain
 from langchain_core.prompts import ChatPromptTemplate
 
 from rag.loaders.s3_file_loader import load_s3_file
 from rag.loaders.s3_directory_loader import load_s3_directory
+from rag.vectorstores import create_in_memory_vectorstore
+from models.llms import get_openai_chat_model
 
 from dotenv import load_dotenv
 load_dotenv()
@@ -33,11 +33,8 @@ def create_chain_from_s3_file(
         region_name=region_name
     )
     
-    # Create vector store
-    vectorstore = InMemoryVectorStore.from_documents(
-        documents=splits,
-        embedding=OpenAIEmbeddings()
-    )
+    # Create vector store using our centralized module
+    vectorstore = create_in_memory_vectorstore(documents=splits)
     
     # Create retriever
     retriever = vectorstore.as_retriever()
@@ -57,8 +54,8 @@ def create_chain_from_s3_file(
         ("human", "{input}"),
     ])
     
-    # Create the chain
-    llm = ChatOpenAI(model="gpt-4", temperature=0.4)
+    # Create the chain using our centralized LLM module
+    llm = get_openai_chat_model(model_name="gpt-4", temperature=0.4)
     question_answer_chain = create_stuff_documents_chain(llm, prompt)
     return create_retrieval_chain(retriever, question_answer_chain)
 
@@ -88,11 +85,8 @@ def create_chain_from_s3_directory(
     
     print(f"Loaded {len(splits)} documents")
 
-    # Create vector store
-    vectorstore = InMemoryVectorStore.from_documents(
-        documents=splits,
-        embedding=OpenAIEmbeddings()
-    )
+    # Create vector store using our centralized module
+    vectorstore = create_in_memory_vectorstore(documents=splits)
     
     # Create retriever
     retriever = vectorstore.as_retriever()
@@ -112,8 +106,8 @@ def create_chain_from_s3_directory(
         ("human", "{input}"),
     ])
     
-    # Create the chain
-    llm = ChatOpenAI(model="gpt-4", temperature=0.4)
+    # Create the chain using our centralized LLM module
+    llm = get_openai_chat_model(model_name="gpt-4", temperature=0.4)
     question_answer_chain = create_stuff_documents_chain(llm, prompt)
     return create_retrieval_chain(retriever, question_answer_chain)
 
