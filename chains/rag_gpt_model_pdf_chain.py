@@ -12,16 +12,13 @@ from langchain.chains import create_retrieval_chain
 from langchain.chains.combine_documents import create_stuff_documents_chain
 from langchain_core.prompts import ChatPromptTemplate
 
+from rag.loaders import load_pdf
 from dotenv import load_dotenv
 load_dotenv()
 
-def create_chain(file_path="./research.pdf"):
-    loader = PyPDFLoader(file_path)
-    with open("/dev/null", "w") as f, contextlib.redirect_stderr(f):
-        docs = loader.load()
-
-    text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
-    splits = text_splitter.split_documents(docs)
+def create_chain(file_path="/data/raw/research.pdf"):
+    # Use our new loader
+    splits = load_pdf(file_path)
     
     vectorstore = InMemoryVectorStore.from_documents(
         documents=splits, embedding=OpenAIEmbeddings()

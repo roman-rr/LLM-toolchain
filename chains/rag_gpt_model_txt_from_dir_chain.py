@@ -1,29 +1,17 @@
 import os
-from langchain_community.document_loaders import DirectoryLoader
-from langchain_openai import ChatOpenAI
+from langchain_openai import ChatOpenAI, OpenAIEmbeddings
 from langchain_core.vectorstores import InMemoryVectorStore
-from langchain_openai import OpenAIEmbeddings
-from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain.chains import create_retrieval_chain
 from langchain.chains.combine_documents import create_stuff_documents_chain
 from langchain_core.prompts import ChatPromptTemplate
 
-def create_chain(directory_path="./rag_docs/"):
-    # Load all text files from the directory
-    loader = DirectoryLoader(
-        directory_path,
-        glob="**/*.txt",  # Load all .txt files recursively
-        show_progress=True,
-        use_multithreading=True
-    )
-    docs = loader.load()
+from rag.loaders import load_text_directory
+from dotenv import load_dotenv
+load_dotenv()
 
-    # Split the documents into chunks
-    text_splitter = RecursiveCharacterTextSplitter(
-        chunk_size=1000,
-        chunk_overlap=200
-    )
-    splits = text_splitter.split_documents(docs)
+def create_chain(directory_path="/data/raw/"):
+    # Use our new loader
+    splits = load_text_directory(directory_path)
 
     # Create vector store
     vectorstore = InMemoryVectorStore.from_documents(

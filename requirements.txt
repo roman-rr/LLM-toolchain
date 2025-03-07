@@ -26,3 +26,7 @@ pydantic
 # Other dependencies
 tqdm
 psycopg2
+boto3
+unstructured[pdf]
+numpy
+protobuf
