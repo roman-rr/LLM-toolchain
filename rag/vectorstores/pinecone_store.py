@@ -9,7 +9,7 @@ def create_pinecone_vectorstore(
     documents: List[Document],
     index_name: str = "langchain-doc-embeddings",
     namespace: Optional[str] = None,
-    embedding_model: Optional[object] = None,
+    embedding_model: object,
     force_reload: bool = False
 ):
     """
@@ -19,19 +19,22 @@ def create_pinecone_vectorstore(
         documents: List of Document objects to store
         index_name: Name of the Pinecone index
         namespace: Optional namespace within the index
-        embedding_model: Embedding model to use (defaults to OpenAIEmbeddings)
+        embedding_model: Embedding model to use
         force_reload: Whether to force reload the index with new documents
     
     Returns:
         A Pinecone vectorstore instance
     """
+    # Check if embedding model is provided
+    if embedding_model is None:
+        raise ValueError("embedding_model must be provided")
+        
     # Create an instance of the Pinecone class
     api_key = os.environ.get("PINECONE_API_KEY")
     if not api_key:
         raise ValueError("PINECONE_API_KEY environment variable not set")
         
     pc = Pinecone(api_key=api_key)
-    embedding_model = embedding_model or get_openai_embeddings()
 
     # Create the Pinecone index if it doesn't exist
     if index_name not in pc.list_indexes().names():
@@ -71,7 +74,7 @@ def create_pinecone_vectorstore(
 def get_existing_pinecone_vectorstore(
     index_name: str = "langchain-doc-embeddings",
     namespace: Optional[str] = None,
-    embedding_model: Optional[object] = None
+    embedding_model: object
 ):
     """
     Connect to an existing Pinecone vectorstore without adding new documents.
@@ -79,13 +82,15 @@ def get_existing_pinecone_vectorstore(
     Args:
         index_name: Name of the Pinecone index
         namespace: Optional namespace within the index
-        embedding_model: Embedding model to use (defaults to OpenAIEmbeddings)
+        embedding_model: Embedding model to use
     
     Returns:
         A Pinecone vectorstore instance
     """
-    embedding_model = embedding_model or get_openai_embeddings()
-    
+    # Check if embedding model is provided
+    if embedding_model is None:
+        raise ValueError("embedding_model must be provided")
+        
     return LangchainPinecone.from_existing_index(
         index_name=index_name,
         embedding=embedding_model,

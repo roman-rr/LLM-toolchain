@@ -12,13 +12,17 @@ def create_in_memory_vectorstore(
     
     Args:
         documents: List of Document objects to store
-        embedding_model: Embedding model to use (defaults to OpenAIEmbeddings)
+        embedding_model: Embedding model to use. If None, will raise ValueError.
     
     Returns:
         An InMemoryVectorStore instance
+        
+    Raises:
+        ValueError: If embedding_model is None
     """
-    embedding_model = embedding_model or get_openai_embeddings()
-    
+    if embedding_model is None:
+        raise ValueError("embedding_model must be provided to create a vectorstore")
+        
     return InMemoryVectorStore.from_documents(
         documents=documents,
         embedding=embedding_model

@@ -11,6 +11,7 @@ from langchain_core.prompts import ChatPromptTemplate
 
 from rag.loaders import load_pdf
 from rag.vectorstores import create_in_memory_vectorstore
+from rag.embeddings import get_openai_embeddings
 from models.llms import get_openai_chat_model
 from dotenv import load_dotenv
 load_dotenv()
@@ -19,8 +20,10 @@ def create_chain(file_path="/data/raw/research.pdf"):
     # Use our new loader
     splits = load_pdf(file_path)
     
+    embedding_model = get_openai_embeddings()
+    
     # Create vector store using our centralized module
-    vectorstore = create_in_memory_vectorstore(documents=splits)
+    vectorstore = create_in_memory_vectorstore(documents=splits, embedding_model=embedding_model)
     
     retriever = vectorstore.as_retriever()
 

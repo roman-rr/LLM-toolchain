@@ -7,6 +7,7 @@ from langchain.chains.combine_documents import create_stuff_documents_chain
 from langchain_core.prompts import ChatPromptTemplate
 
 from rag.vectorstores import create_pinecone_vectorstore, get_existing_pinecone_vectorstore
+from rag.embeddings import get_openai_embeddings
 from models.llms import get_openai_chat_model
 from dotenv import load_dotenv
 load_dotenv()
@@ -21,11 +22,13 @@ def setup_pinecone_vectors(file_path="./research.pdf", index_name="langchain-doc
     text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
     splits = text_splitter.split_documents(docs)
 
+    embedding_model = get_openai_embeddings()
+
     # Use our centralized module to create or get the vectorstore
     if not force_reload:
         try:
             # Try to get existing vectorstore first
-            return get_existing_pinecone_vectorstore(index_name=index_name)
+            return get_existing_pinecone_vectorstore(index_name=index_name, embedding_model=embedding_model)
         except Exception as e:
             print(f"Error getting existing index: {str(e)}. Creating new index.")
             
@@ -33,6 +36,7 @@ def setup_pinecone_vectors(file_path="./research.pdf", index_name="langchain-doc
     return create_pinecone_vectorstore(
         documents=splits,
         index_name=index_name,
+        embedding_model=embedding_model,
         force_reload=force_reload
     )
 

@@ -5,6 +5,7 @@ from langchain_core.prompts import ChatPromptTemplate
 
 from rag.loaders import load_text_directory
 from rag.vectorstores import create_in_memory_vectorstore
+from rag.embeddings import get_openai_embeddings
 from models.llms import get_openai_chat_model
 from dotenv import load_dotenv
 load_dotenv()
@@ -12,9 +13,11 @@ load_dotenv()
 def create_chain(directory_path="/data/raw/"):
     # Use our new loader
     splits = load_text_directory(directory_path)
+    
+    embedding_model = get_openai_embeddings()
 
     # Create vector store using our centralized module
-    vectorstore = create_in_memory_vectorstore(documents=splits)
+    vectorstore = create_in_memory_vectorstore(documents=splits, embedding_model=embedding_model)
 
     # Create a retriever
     retriever = vectorstore.as_retriever()

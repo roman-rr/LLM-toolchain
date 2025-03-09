@@ -7,6 +7,7 @@ from rag.loaders.s3_file_loader import load_s3_file
 from rag.loaders.s3_directory_loader import load_s3_directory
 from rag.vectorstores import create_in_memory_vectorstore
 from models.llms import get_openai_chat_model
+from rag.embeddings import get_openai_embeddings
 
 from dotenv import load_dotenv
 load_dotenv()
@@ -32,9 +33,10 @@ def create_chain_from_s3_file(
         aws_secret_access_key=aws_secret_access_key,
         region_name=region_name
     )
-    
+
+    embedding_model = get_openai_embeddings()
     # Create vector store using our centralized module
-    vectorstore = create_in_memory_vectorstore(documents=splits)
+    vectorstore = create_in_memory_vectorstore(documents=splits, embedding_model=embedding_model)
     
     # Create retriever
     retriever = vectorstore.as_retriever()
@@ -86,7 +88,8 @@ def create_chain_from_s3_directory(
     print(f"Loaded {len(splits)} documents")
 
     # Create vector store using our centralized module
-    vectorstore = create_in_memory_vectorstore(documents=splits)
+    embedding_model = get_openai_embeddings()
+    vectorstore = create_in_memory_vectorstore(documents=splits, embedding_model=embedding_model)
     
     # Create retriever
     retriever = vectorstore.as_retriever()
