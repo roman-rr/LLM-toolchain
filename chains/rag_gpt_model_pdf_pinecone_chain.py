@@ -10,6 +10,7 @@ from rag.vectorstores import create_pinecone_vectorstore, get_existing_pinecone_
 from rag.embeddings import get_openai_embeddings
 from models.llms import get_openai_chat_model
 from dotenv import load_dotenv
+from rag.prompts.qa_prompts import get_qa_prompt
 load_dotenv()
 
 def setup_pinecone_vectors(file_path="./research.pdf", index_name="langchain-doc-embeddings", force_reload=False):
@@ -48,20 +49,7 @@ def create_chain_from_vectorstore(vectorstore):
     retriever = vectorstore.as_retriever()
 
     # Create prompt template
-    system_prompt = (
-        "You are an assistant for question-answering tasks. "
-        "Use the following pieces of retrieved context to answer "
-        "the question. If you don't know the answer, say that you "
-        "don't know. Use three sentences maximum and keep the "
-        "answer concise."
-        "\n\n"
-        "{context}"
-    )
-
-    prompt = ChatPromptTemplate.from_messages([
-        ("system", system_prompt),
-        ("human", "{input}"),
-    ])
+    prompt = get_qa_prompt()
 
     # Create and return the chain
     question_answer_chain = create_stuff_documents_chain(llm, prompt)

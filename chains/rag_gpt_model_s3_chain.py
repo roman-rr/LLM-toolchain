@@ -1,13 +1,13 @@
 import os
 from langchain.chains import create_retrieval_chain
 from langchain.chains.combine_documents import create_stuff_documents_chain
-from langchain_core.prompts import ChatPromptTemplate
 
 from rag.loaders.s3_file_loader import load_s3_file
 from rag.loaders.s3_directory_loader import load_s3_directory
 from rag.vectorstores import create_in_memory_vectorstore
 from models.llms import get_openai_chat_model
 from rag.embeddings import get_openai_embeddings
+from rag.prompts.qa_prompts import get_qa_prompt
 
 from dotenv import load_dotenv
 load_dotenv()
@@ -42,19 +42,7 @@ def create_chain_from_s3_file(
     retriever = vectorstore.as_retriever()
     
     # Define prompt template
-    system_prompt = """
-    You are an assistant for question-answering tasks. 
-    Use the following pieces of retrieved context to answer the question.
-    If you don't know the answer, say that you don't know.
-    Use three sentences maximum and keep the answer concise.
-
-    Context: {context}
-    """
-    
-    prompt = ChatPromptTemplate.from_messages([
-        ("system", system_prompt),
-        ("human", "{input}"),
-    ])
+    prompt = get_qa_prompt()
     
     # Create the chain using our centralized LLM module
     llm = get_openai_chat_model(model_name="gpt-4", temperature=0.4)
@@ -95,20 +83,8 @@ def create_chain_from_s3_directory(
     retriever = vectorstore.as_retriever()
     
     # Define prompt template
-    system_prompt = """
-    You are an assistant for question-answering tasks. 
-    Use the following pieces of retrieved context to answer the question.
-    If you don't know the answer, say that you don't know.
-    Use three sentences maximum and keep the answer concise.
+    prompt = get_qa_prompt()
 
-    Context: {context}
-    """
-    
-    prompt = ChatPromptTemplate.from_messages([
-        ("system", system_prompt),
-        ("human", "{input}"),
-    ])
-    
     # Create the chain using our centralized LLM module
     llm = get_openai_chat_model(model_name="gpt-4", temperature=0.4)
     question_answer_chain = create_stuff_documents_chain(llm, prompt)

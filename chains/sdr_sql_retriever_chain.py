@@ -8,6 +8,7 @@ from langchain_core.output_parsers import StrOutputParser
 from langchain_core.callbacks import StdOutCallbackHandler
 
 from models.llms import get_openai_chat_model
+from rag.prompts.sql_prompts import get_sql_generation_prompt, get_sql_answer_prompt
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -119,22 +120,12 @@ def create_chain(db_uri: Optional[str] = None, table_names: Optional[List[str]] 
                 "answer": "I encountered an error while trying to understand the database structure."
             }
         
-        # Create a focused prompt for SQL generation
-        query_prompt = ChatPromptTemplate.from_template(
-            """You are a SQL expert. Given the following SQL database schema and a question, 
-            write a SQL query that answers the question.
-            
-            Database Schema:
-            {schema}
-            
-            Be efficient and only select the columns needed to answer the question.
-            
-            Question: {question}
-            SQL Query: """
-        )
+        # Get the SQL generation prompt
+        query_prompt = get_sql_generation_prompt()
         
         # Generate SQL query
         try:
+            # Create a pipelie where "|" is a langchain enhanced __or__ method for pipeline
             query = query_prompt | llm | StrOutputParser()
             sql_query = query.invoke({
                 "schema": filtered_schema,
@@ -156,18 +147,12 @@ def create_chain(db_uri: Optional[str] = None, table_names: Optional[List[str]] 
             logger.error(f"Error executing query: {str(e)}")
             response = f"Error executing query: {str(e)}"
         
-        # Create a simple prompt for answering
-        answer_prompt = ChatPromptTemplate.from_template(
-            """Based on the SQL query and result, write a natural language response:
-            
-            Question: {question}
-            SQL Query: {query}
-            SQL Response: {response}
-            """
-        )
+        # Get the SQL answer prompt
+        answer_prompt = get_sql_answer_prompt()
         
         # Generate natural language answer
         try:
+            # Create a pipeline where "|" is a langchain enhanced __or__ method for pipeline
             answer_chain = answer_prompt | llm | StrOutputParser()
             answer = answer_chain.invoke({
                 "question": question,

@@ -14,6 +14,7 @@ from rag.vectorstores import create_in_memory_vectorstore
 from rag.embeddings import get_openai_embeddings
 from models.llms import get_openai_chat_model
 from dotenv import load_dotenv
+from rag.prompts.qa_prompts import get_qa_prompt
 load_dotenv()
 
 def create_chain(file_path="/data/raw/research.pdf"):
@@ -27,20 +28,8 @@ def create_chain(file_path="/data/raw/research.pdf"):
     
     retriever = vectorstore.as_retriever()
 
-    system_prompt = (
-        "You are an assistant for question-answering tasks. "
-        "Use the following pieces of retrieved context to answer "
-        "the question. If you don't know the answer, say that you "
-        "don't know. Use three sentences maximum and keep the "
-        "answer concise."
-        "\n\n"
-        "{context}"
-    )
-
-    prompt = ChatPromptTemplate.from_messages([
-        ("system", system_prompt),
-        ("human", "{input}"),
-    ])
+    # Use the centralized prompt
+    prompt = get_qa_prompt()
 
     # Use our centralized LLM module
     llm = get_openai_chat_model(model_name="gpt-4", temperature=0.4)
