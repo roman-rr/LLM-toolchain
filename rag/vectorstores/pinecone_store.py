@@ -95,4 +95,48 @@ def get_existing_pinecone_vectorstore(
         index_name=index_name,
         embedding=embedding_model,
         namespace=namespace
+    )
+
+def get_or_create_pinecone_vectorstore(
+    documents: List[Document],
+    index_name: str = "langchain-doc-embeddings",
+    namespace: Optional[str] = None,
+    embedding_model: object = None,
+    force_reload: bool = False
+):
+    """
+    Get an existing Pinecone vectorstore or create a new one if it doesn't exist.
+    
+    Args:
+        documents: List of Document objects to store if creating new vectorstore
+        index_name: Name of the Pinecone index
+        namespace: Optional namespace within the index
+        embedding_model: Embedding model to use (if None, will use OpenAI embeddings)
+        force_reload: Whether to force reload the index with new documents
+    
+    Returns:
+        A Pinecone vectorstore instance
+    """
+    # Use OpenAI embeddings by default if none provided
+    if embedding_model is None:
+        embedding_model = get_openai_embeddings()
+        
+    # Try to get existing vectorstore first if not forcing reload
+    if not force_reload:
+        try:
+            return get_existing_pinecone_vectorstore(
+                index_name=index_name, 
+                namespace=namespace,
+                embedding_model=embedding_model
+            )
+        except Exception as e:
+            print(f"Error getting existing index: {str(e)}. Creating new index.")
+    
+    # Create new vectorstore with documents
+    return create_pinecone_vectorstore(
+        documents=documents,
+        index_name=index_name,
+        namespace=namespace,
+        embedding_model=embedding_model,
+        force_reload=force_reload
     ) 

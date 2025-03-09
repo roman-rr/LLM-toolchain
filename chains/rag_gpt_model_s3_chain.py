@@ -1,10 +1,11 @@
 import os
 from langchain.chains import create_retrieval_chain
 from langchain.chains.combine_documents import create_stuff_documents_chain
+from enum import Enum
 
 from rag.loaders.s3_file_loader import load_s3_file
 from rag.loaders.s3_directory_loader import load_s3_directory
-from rag.vectorstores import create_in_memory_vectorstore
+from rag.vectorstores import get_vectorstore, VectorStoreType
 from models.llms import get_openai_chat_model
 from rag.embeddings import get_openai_embeddings
 from rag.prompts.qa_prompts import get_qa_prompt
@@ -17,7 +18,10 @@ def create_chain_from_s3_file(
     file_key: str,
     aws_access_key_id: str = None,
     aws_secret_access_key: str = None,
-    region_name: str = None
+    region_name: str = None,
+    vectorstore_type: VectorStoreType = VectorStoreType.IN_MEMORY,
+    index_name: str = "s3-document-embeddings",
+    force_reload: bool = False
 ):
     """Create a RAG chain from a single S3 file"""
     # Use environment variables if credentials not provided
@@ -35,8 +39,14 @@ def create_chain_from_s3_file(
     )
 
     embedding_model = get_openai_embeddings()
-    # Create vector store using our centralized module
-    vectorstore = create_in_memory_vectorstore(documents=splits, embedding_model=embedding_model)
+    # Create vector store using our factory function
+    vectorstore = get_vectorstore(
+        documents=splits, 
+        vectorstore_type=vectorstore_type,
+        embedding_model=embedding_model,
+        index_name=index_name,
+        force_reload=force_reload
+    )
     
     # Create retriever
     retriever = vectorstore.as_retriever()
