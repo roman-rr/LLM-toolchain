@@ -18,6 +18,7 @@ logger = logging.getLogger(__name__)
 
 def create_chain(db_uri: Optional[str] = None, table_names: Optional[List[str]] = None):
     """
+    Structural Data Retrieval Chain
     Create a chain that can execute SQL queries against a PostgreSQL database.
     
     Args:

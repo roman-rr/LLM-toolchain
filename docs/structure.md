@@ -17,6 +17,10 @@ project-root/
 │   ├── custom_chain.py        # Custom LLM chains
 │   └── __init__.py
 │
+├── cli/                       # Command-line interfaces
+│   ├── rag_query.py           # CLI for querying documents with RAG
+│   └── __init__.py
+│
 ├── rag/
 │   ├── loaders/               # PDF, TXT, Web loaders
 │   ├── vectorstores/          # Vector DB configs (Chroma, Pinecone)
