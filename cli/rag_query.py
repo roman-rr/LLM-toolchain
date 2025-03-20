@@ -32,6 +32,10 @@ def main():
     parser.add_argument("--region", help="AWS region name")
     parser.add_argument("--model", default="gpt-4", help="LLM model to use (default: gpt-4)")
     parser.add_argument("--temperature", type=float, default=0.4, help="Temperature setting for the LLM (default: 0.4)")
+    parser.add_argument("--index_name", type=str, default="langchain-doc-embeddings",
+                        help="Name of the vector store index")
+    parser.add_argument("--force_reload", action="store_true",
+                        help="Force reload the vectorstore")
     
     # Parse arguments
     args = parser.parse_args()
@@ -86,7 +90,8 @@ def main():
             "source_type": source_type,
             "vectorstore_type": vectorstore_type,
             "model_name": args.model,
-            "temperature": args.temperature
+            "temperature": args.temperature,
+            "force_reload": args.force_reload,
         }
         
         # Add source-specific parameters

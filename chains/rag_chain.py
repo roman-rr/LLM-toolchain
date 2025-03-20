@@ -21,7 +21,7 @@ def create_chain(
     bucket_name: str = None, 
     file_key: str = None, 
     prefix: str = None,
-    index_name: str = "document-embeddings",
+    index_name: str = "langchain-doc-embeddings",
     vectorstore_type: VectorStoreType = VectorStoreType.IN_MEMORY,
     force_reload: bool = False,
     model_name: str = "gpt-4",
@@ -162,7 +162,7 @@ def create_chain(
     splits = get_loader(**kwargs)
     
     if isinstance(splits, list) and len(splits) > 0:
-        print(f"Loaded {len(splits)} documents")
+        print(f"Loaded {len(splits)} document splits")
     
     # Get embedding model
     embedding_model = get_openai_embeddings()
@@ -176,6 +176,8 @@ def create_chain(
         force_reload=force_reload
     )
 
+    print("Vectorstore created with type: ", vectorstore_type)
+    
     # Create retriever
     retriever = vectorstore.as_retriever()
     

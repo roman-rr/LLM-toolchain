@@ -16,6 +16,7 @@ class SourceType(str, Enum):
     TEXT_FILE = "text_file"
     S3_FILE = "s3_file"
     S3_DIRECTORY = "s3_directory"
+    EMBEDDINGS = "embeddings"  # New source type for existing embeddings
 
 
 def get_loader(
@@ -88,9 +89,14 @@ def get_loader(
         **unstructured_kwargs: Additional kwargs for unstructured library
         
     Returns:
-        List of document chunks
+        List of document chunks, or empty list for EMBEDDINGS source type
     """
-    if source_type == SourceType.PDF:
+    if source_type == SourceType.EMBEDDINGS:
+        # For EMBEDDINGS type, return empty list since we'll use existing vectorstore
+        print("Using existing embeddings from vectorstore")
+        return []
+    
+    elif source_type == SourceType.PDF:
         if not source_path:
             raise ValueError("source_path is required for PDF loader")
         return load_pdf(

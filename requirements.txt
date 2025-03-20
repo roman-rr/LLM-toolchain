@@ -7,7 +7,8 @@ langchain-openai
 langsmith
 
 # Vector stores and embeddings
-pinecone-client
+langchain-pinecone
+
 
 # Document processing
 pypdf

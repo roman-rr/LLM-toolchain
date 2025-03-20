@@ -28,13 +28,13 @@ A comprehensive toolchain for Large Language Models (LLMs) built on LangChain, p
 ## Usage
 ### Quick Installation
 - `cd LLM-toolchain`
-- `cp .env-example .env`
+- `CAUTION: cp .env-example .env`
 - `python3.12 -m venv venv`
 - `source venv/bin/activate`
 - `pip install -r requirements.txt`
 
-### Run any chain from terminal
-- `python -m chains.rag_gpt_model_s3_chain`
+### Run any chain from terminal 
+[Docs & Examples](/cli/rag_query_options.md)
 
 ## API
 Application serverd at AWS python-functions
