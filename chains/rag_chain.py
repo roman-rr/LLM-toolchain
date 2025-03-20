@@ -28,6 +28,8 @@ def create_chain(
     temperature: float = 0.4,
     chunk_size: int = 1000,
     chunk_overlap: int = 200,
+    similarity_threshold: float = 0.7,
+    max_documents: int = 4,
     aws_access_key_id: str = None,
     aws_secret_access_key: str = None,
     aws_session_token: str = None,
@@ -64,6 +66,8 @@ def create_chain(
         temperature: Temperature setting for the LLM
         chunk_size: Size of each text chunk
         chunk_overlap: Overlap between chunks
+        similarity_threshold: Minimum similarity score (0-1) for retrieved documents
+        max_documents: Maximum number of documents to retrieve
         aws_access_key_id: AWS access key ID (for S3 sources)
         aws_secret_access_key: AWS secret access key (for S3 sources)
         aws_session_token: AWS session token (for S3 sources)
@@ -179,7 +183,13 @@ def create_chain(
     print("Vectorstore created with type: ", vectorstore_type)
     
     # Create retriever
-    retriever = vectorstore.as_retriever()
+    retriever = vectorstore.as_retriever(
+        search_type="similarity_score_threshold",
+        search_kwargs={
+            "score_threshold": similarity_threshold,
+            "k": max_documents
+        }
+    )
     
     # Define prompt template
     prompt = get_qa_prompt()
