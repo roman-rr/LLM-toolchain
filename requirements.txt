@@ -31,3 +31,4 @@ boto3
 unstructured[pdf]
 numpy
 protobuf
+pydantic-settings
