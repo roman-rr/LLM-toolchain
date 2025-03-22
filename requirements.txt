@@ -4,6 +4,7 @@ langchain-core
 langchain-community
 langchain-text-splitters
 langchain-openai
+langchain-postgres 
 langsmith
 
 # Vector stores and embeddings
@@ -27,6 +28,7 @@ pydantic
 # Other dependencies
 tqdm
 psycopg2
+psycopg2-binary
 boto3
 unstructured[pdf]
 numpy
