@@ -216,10 +216,10 @@ class ChatManager:
                 chunk_content = str(chunk)
             
             # Print the chunk content without a newline
-            print(chunk_content, end="", flush=True)
+            # print(chunk_content, end="", flush=True)
             
             # Accumulate the full content
             full_content += chunk_content
-        
+
         # Return the complete response content for saving to history
         return full_content 

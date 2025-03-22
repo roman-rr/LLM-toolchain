@@ -14,6 +14,7 @@ A comprehensive toolchain for Large Language Models (LLMs) built on LangChain, p
 - **SDR (Structured Data Retrieval)**: Querying structured data stored in relational databases (e.g., PostgreSQL, MySQL, SQLite).
 - **Fine Tuning Models**: Support for custom model fine-tuning and specialized chain creation
 - **Vector Database** Support Pinecone and other intergations
+- **Chat History**: Persistent conversation history with multithreading support
 - **Experiments**: Integrated experiment tracking and evaluation using LangSmith
 - **Evaluations**: Comprehensive evaluation framework for assessing model performance
 
@@ -34,7 +35,8 @@ A comprehensive toolchain for Large Language Models (LLMs) built on LangChain, p
 - `pip install -r requirements.txt`
 
 ### Run any chain from terminal 
-[Docs & Examples](/cli/rag_query_options.md)
+[RAG Query Examples](/docs/rag_chain_examples.md)
+[Chat History Examples](/docs/chat_history_chain_examples.md)
 
 ## API
 Application serverd at AWS python-functions
