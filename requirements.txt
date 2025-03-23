@@ -6,6 +6,8 @@ langchain-text-splitters
 langchain-openai
 langchain-postgres 
 langsmith
+langgraph
+langchain_experimental
 
 # Vector stores and embeddings
 langchain-pinecone
@@ -34,3 +36,4 @@ unstructured[pdf]
 numpy
 protobuf
 pydantic-settings
+google-search-results

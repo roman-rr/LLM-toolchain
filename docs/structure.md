@@ -14,11 +14,14 @@ project-root/
 │   ├── base.py                # Base Chain classes/interfaces
 │   ├── retrieval_chain.py     # RAG-based chains
 │   ├── sql_chain.py           # SQL-based chains
+│   ├── agent_chain.py         # Agent-based chains
 │   ├── custom_chain.py        # Custom LLM chains
 │   └── __init__.py
 │
 ├── cli/                       # Command-line interfaces
 │   ├── rag_query.py           # CLI for querying documents with RAG
+│   ├── chat_history_query.py  # CLI for chat history chains
+│   ├── agent_query.py         # CLI for agent chains
 │   └── __init__.py
 │
 ├── rag/
@@ -31,9 +34,20 @@ project-root/
 │
 ├── agents/
 │   ├── tools/                 # Custom agent tools/actions
+│   │   ├── base.py            # Tool registration and management
+│   │   ├── calculator_tool.py # Calculator functionality
+│   │   ├── search_tool.py     # Search functionality
+│   │   ├── weather_tool.py    # Weather information tool
+│   │   └── __init__.py
 │   ├── prompts/               # Prompt templates specific to agents
 │   ├── workflows/             # Agent orchestration and workflows
 │   └── base.py                # Base agent classes or interfaces
+│
+├── graphs/                    # LangGraph implementations
+│   ├── react_agent.py         # REACT agent graph definition
+│   ├── conversational_agent.py # Conversational agent graph
+│   ├── utils.py               # Shared graph utilities
+│   └── __init__.py
 │
 ├── models/
 │   ├── llms/                  # LLM integrations (OpenAI, Anthropic, etc.)
@@ -83,6 +97,10 @@ project-root/
 │   └── .dockerignore
 │
 ├── docs/                      # Documentation (architecture, guides, usage)
+│   ├── rag_chain_examples.md  # Examples of RAG chain usage
+│   ├── chat_history_chain_examples.md # Examples of chat history chain usage
+│   ├── agent_chain_examples.md # Examples of agent chain usage
+│   └── structure.md           # Project structure documentation
 ├── experiments.md             # Record of experimental insights
 ├── requirements.txt           # Dependencies
 ├── requirements-dev.txt       # Dependencies for dev/tests
