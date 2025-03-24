@@ -43,8 +43,11 @@ A comprehensive toolchain for Large Language Models (LLMs) built on LangChain, p
 [Chat History Examples](/docs/chat_history_chain_examples.md)
 [Agent Chain Examples](/docs/agent_chain_examples.md)
 
-## API
-Application serverd at AWS python-functions
+## Fast API
+
+
+
+## Application serverd at AWS python-functions
 
 ### Usage
 - `arc sandbox`
