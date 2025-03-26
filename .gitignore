@@ -48,7 +48,7 @@ logs/
 .env.local
 
 # Model files and data
-chroma_db/
+chroma_db/*
 
 # LangSmith specific
 .langsmith/
