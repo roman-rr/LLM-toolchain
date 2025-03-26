@@ -48,10 +48,7 @@ logs/
 .env.local
 
 # Model files and data
-models/
-data/
-vectors/
-embeddings/
+chroma_db/
 
 # LangSmith specific
 .langsmith/
