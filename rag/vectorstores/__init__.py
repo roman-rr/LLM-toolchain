@@ -16,6 +16,8 @@ class VectorStoreType(str, Enum):
 def get_vectorstore(
     documents: List[Document], 
     embedding_model: object,
+    namespace: Optional[str] = None,
+    collection_name: Optional[str] = None,
     vectorstore_type: VectorStoreType = VectorStoreType.IN_MEMORY,
     index_name: str = "langchain-doc-embeddings",
     force_reload: bool = False
@@ -46,6 +48,8 @@ def get_vectorstore(
         return setup_pinecone_vectorstore(
             documents=documents,
             embedding_model=embedding_model,
+            namespace=namespace,
+            collection_name=collection_name,
             index_name=index_name,
             force_reload=force_reload
         )
@@ -53,7 +57,10 @@ def get_vectorstore(
         return setup_chromadb_vectorstore(
             documents=documents,
             embedding_model=embedding_model,
-            index_name=index_name
+            namespace=namespace,
+            collection_name=collection_name,
+            index_name=index_name,
+            force_reload=force_reload
         )
     else:
         raise ValueError(f"Unsupported vectorstore type: {vectorstore_type}") 
