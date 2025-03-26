@@ -21,6 +21,14 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+@app.get("/")
+async def root():
+    return {
+        "status": "healthy",
+        "version": "1.0.0",
+        "message": "File Upload API is running"
+    }
+
 # Include routers
 app.include_router(api_router, prefix=f"/api/{settings.API_VERSION}")
 

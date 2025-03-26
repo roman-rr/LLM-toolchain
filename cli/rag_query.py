@@ -36,6 +36,10 @@ def main():
                         help="Name of the vector store index")
     parser.add_argument("--force_reload", action="store_true",
                         help="Force reload the vectorstore")
+    parser.add_argument("--namespace", type=str,
+                       help="Namespace for Pinecone vectorstore")
+    parser.add_argument("--collection", type=str,
+                       help="Collection name for Chroma vectorstore")
     
     # Parse arguments
     args = parser.parse_args()
@@ -92,6 +96,8 @@ def main():
             "model_name": args.model,
             "temperature": args.temperature,
             "force_reload": args.force_reload,
+            "namespace": args.namespace,
+            "collection_name": args.collection,
         }
         
         # Add source-specific parameters

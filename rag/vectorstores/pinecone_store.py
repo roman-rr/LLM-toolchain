@@ -19,8 +19,8 @@ def setup_pinecone_vectorstore(
         documents: Optional list of Document objects to store
         embedding_model: Embedding model to use (if None, will use OpenAI embeddings)
         index_name: Name of the Pinecone index
-        namespace: Optional namespace within the index
-        force_reload: Whether to force reload the index with new documents
+        namespace: Optional namespace for multi-user isolation within the index
+        force_reload: Whether to force reload the namespace with new documents
     
     Returns:
         A Pinecone vectorstore instance
@@ -51,8 +51,9 @@ def setup_pinecone_vectorstore(
     # Connect to the index
     pinecone_index = pc.Index(index_name)
     
-    # Delete existing vectors if force_reload is True
-    if force_reload and documents is not None:
+    # Delete existing vectors in the namespace if force_reload is True
+    if force_reload and documents is not None and namespace:
+        print(f"Deleting existing vectors in namespace: {namespace}")
         pinecone_index.delete(delete_all=True, namespace=namespace)
     
     # Create vectorstore
@@ -65,11 +66,16 @@ def setup_pinecone_vectorstore(
     
     # Add documents if provided
     if documents is not None:
-        print(f"Adding {len(documents)} documents to Pinecone")
+        namespace_info = f" in namespace '{namespace}'" if namespace else ""
+        print(f"Adding {len(documents)} documents to Pinecone{namespace_info}")
         vectorstore.add_documents(documents)
         
         # Verify documents were added
         stats = pinecone_index.describe_index_stats()
-        print(f"Index stats after adding documents: {stats}")
+        if namespace:
+            namespace_count = stats.namespaces.get(namespace, {}).get('vector_count', 0)
+            print(f"Namespace '{namespace}' vector count: {namespace_count}")
+        else:
+            print(f"Index stats after adding documents: {stats}")
     
     return vectorstore 

@@ -22,6 +22,8 @@ def create_chain(
     file_key: str = None, 
     prefix: str = None,
     index_name: str = "langchain-doc-embeddings",
+    namespace: str = None,
+    collection_name: str = None,
     vectorstore_type: VectorStoreType = VectorStoreType.IN_MEMORY,
     force_reload: bool = False,
     chroma_db_path: str = "./chroma_db",
@@ -61,6 +63,8 @@ def create_chain(
         file_key: S3 file key (for single S3 file)
         prefix: S3 prefix/directory (for S3 directory)
         index_name: Name of the index (for Pinecone)
+        namespace: Namespace for Pinecone
+        collection_name: Collection name for Chroma
         vectorstore_type: Type of vectorstore to use
         chroma_db_path: Path to store Chroma database files (default: ./chroma_db)
         force_reload: Whether to force reload the index with new documents
@@ -184,10 +188,16 @@ def create_chain(
             vectorstore_type=vectorstore_type,
             embedding_model=embedding_model,
             index_name=index_name,
+            namespace=namespace,
+            collection_name=collection_name,
             force_reload=force_reload
         )
 
-        print("Vectorstore created with type: ", vectorstore_type)
+        print(f"Vectorstore created with type: {vectorstore_type}")
+        if namespace:
+            print(f"Using Pinecone namespace: {namespace}")
+        if collection_name:
+            print(f"Using Chroma collection: {collection_name}")
         
         # Create retriever with vectorstore-specific configurations
         if vectorstore_type == VectorStoreType.CHROMA:

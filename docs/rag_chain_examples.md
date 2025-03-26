@@ -45,6 +45,8 @@ python -m cli.rag_query --source_type SOURCE_TYPE --vectorstore_type VECTOR_STOR
 | `--model` | LLM model to use | gpt-4 |
 | `--temperature` | Temperature setting for the LLM | 0.4 |
 | `--force_reload` | Force reload the vectorstore | False |
+| `--namespace` | Pinecone namespace for multi-user isolation | None |
+| `--collection` | Chroma collection name for multi-user isolation | None |
 
 ## Examples
 
@@ -96,6 +98,11 @@ python -m cli.rag_query --vectorstore_type pinecone --source_type pdf --source_p
 
 # Force reload the vectorstore (clears existing vectors first)
 python -m cli.rag_query --vectorstore_type pinecone --source_type pdf --source_path ./data/raw/research.pdf --force_reload --query "What are the key findings?" --index_name "langchain-doc-embeddings"
+
+# Store embeddings in a specific namespace
+python -m cli.rag_query --vectorstore_type pinecone --source_type pdf \
+    --source_path ./data/raw/research.pdf --namespace "user123" \
+    --query "What are the key findings?"
 ```
 
 
@@ -107,6 +114,10 @@ python -m cli.rag_query --source_type embeddings --vectorstore_type pinecone --q
 
 # Query existing embeddings with specific index name
 python -m cli.rag_query --source_type embeddings --vectorstore_type pinecone --index_name "langchain-doc-embeddings" --query "What are the key findings?"
+
+# Query from a specific namespace
+python -m cli.rag_query --vectorstore_type pinecone --source_type embeddings \
+    --namespace "user123" --query "What are the key findings?"
 ```
 
 Note: The `embeddings` source type is useful when you want to query existing vectors in your vectorstore without loading new documents. This is particularly useful with persistent vectorstores like Pinecone where you've previously loaded and embedded documents.
@@ -115,6 +126,7 @@ Note: The `embeddings` source type is useful when you want to query existing vec
 ### Using Chroma Vector Store
 
 ```bash
-# Using Chroma with local persistence
-python -m cli.rag_query --vectorstore_type chroma --source_type pdf --source_path ./data/raw/research.pdf --query "What research about?"
+# Using Chroma with local persistence in a specific collection
+python -m cli.rag_query --vectorstore_type chroma --source_type pdf --source_path ./data/raw/research.pdf --query "What research about?" \ --collection "user123_docs"
+
 ```

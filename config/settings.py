@@ -1,3 +1,4 @@
+import os
 from pathlib import Path
 from typing import Optional
 from pydantic_settings import BaseSettings
@@ -16,10 +17,10 @@ class Settings(BaseSettings):
     BASE_DIR: Path = Path(__file__).resolve().parent.parent
     
     # AWS Configuration
-    AWS_ACCESS_KEY_ID: str
-    AWS_SECRET_ACCESS_KEY: str
-    AWS_BUCKET_NAME: str
-    AWS_REGION: str
+    AWS_ACCESS_KEY_ID: str = os.environ.get("AWS_ACCESS_KEY_ID")
+    AWS_SECRET_ACCESS_KEY: str = os.environ.get("AWS_SECRET_ACCESS_KEY")
+    AWS_BUCKET_NAME: str = os.environ.get("AWS_BUCKET_NAME")
+    AWS_REGION: str = os.environ.get("AWS_REGION")
     
     # LangChain Configuration
     LANGCHAIN_TRACING_V2: bool = False
@@ -38,6 +39,9 @@ class Settings(BaseSettings):
     
     # Search Configuration
     SERPAPI_API_KEY: str
+    
+    # Chroma Configuration
+    CHROMA_DB_PATH: str
     
     class Config:
         env_file = ".env"
