@@ -11,7 +11,8 @@ langchain_experimental
 
 # Vector stores and embeddings
 langchain-pinecone
-
+chromadb
+langchain-chroma
 
 # Document processing
 pypdf

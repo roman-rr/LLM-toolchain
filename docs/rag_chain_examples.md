@@ -25,6 +25,7 @@ python -m cli.rag_query --source_type SOURCE_TYPE --vectorstore_type VECTOR_STOR
 |-------------------|-------------|--------------------------|
 | `IN_MEMORY` | In-memory vector store (default) | No additional configuration needed |
 | `PINECONE` | Pinecone vector database | Requires `PINECONE_API_KEY` environment variable |
+| `CHROMA` | Local Chroma vector database | Stores data in `CHROMA_DB_PATH` |
 
 ## All Available Options
 
@@ -109,3 +110,11 @@ python -m cli.rag_query --source_type embeddings --vectorstore_type pinecone --i
 ```
 
 Note: The `embeddings` source type is useful when you want to query existing vectors in your vectorstore without loading new documents. This is particularly useful with persistent vectorstores like Pinecone where you've previously loaded and embedded documents.
+
+
+### Using Chroma Vector Store
+
+```bash
+# Using Chroma with local persistence
+python -m cli.rag_query --vectorstore_type chroma --source_type pdf --source_path ./data/raw/research.pdf --query "What research about?"
+```

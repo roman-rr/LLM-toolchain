@@ -44,7 +44,8 @@ A comprehensive toolchain for Large Language Models (LLMs) built on LangChain, p
 [Agent Chain Examples](/docs/agent_chain_examples.md)
 
 ## Fast API
-
+### Dev run server
+- `python -m api.main`
 
 
 ## Application serverd at AWS python-functions

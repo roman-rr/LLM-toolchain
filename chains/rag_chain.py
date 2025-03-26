@@ -24,12 +24,13 @@ def create_chain(
     index_name: str = "langchain-doc-embeddings",
     vectorstore_type: VectorStoreType = VectorStoreType.IN_MEMORY,
     force_reload: bool = False,
+    chroma_db_path: str = "./chroma_db",
     model_name: str = "gpt-4",
     temperature: float = 0.4,
     chunk_size: int = 1000,
     chunk_overlap: int = 200,
     similarity_threshold: float = 0.7,
-    max_documents: int = 4,
+    max_documents: int = 6,
     aws_access_key_id: str = None,
     aws_secret_access_key: str = None,
     aws_session_token: str = None,
@@ -61,6 +62,7 @@ def create_chain(
         prefix: S3 prefix/directory (for S3 directory)
         index_name: Name of the index (for Pinecone)
         vectorstore_type: Type of vectorstore to use
+        chroma_db_path: Path to store Chroma database files (default: ./chroma_db)
         force_reload: Whether to force reload the index with new documents
         model_name: Name of the LLM model to use
         temperature: Temperature setting for the LLM
@@ -165,36 +167,60 @@ def create_chain(
     # Load documents using the unified loader interface
     splits = get_loader(**kwargs)
     
-    if isinstance(splits, list) and len(splits) > 0:
+    # Validate that we have documents to process
+    if not splits or (isinstance(splits, list) and len(splits) == 0):
+        raise ValueError("No documents were loaded. Please check your source path and make sure the file exists and is not empty.")
+    
+    if isinstance(splits, list):
         print(f"Loaded {len(splits)} document splits")
     
     # Get embedding model
     embedding_model = get_openai_embeddings()
 
-    # Create vector store
-    vectorstore = get_vectorstore(
-        documents=splits, 
-        vectorstore_type=vectorstore_type,
-        embedding_model=embedding_model,
-        index_name=index_name,
-        force_reload=force_reload
-    )
+    try:
+        # Create vector store
+        vectorstore = get_vectorstore(
+            documents=splits, 
+            vectorstore_type=vectorstore_type,
+            embedding_model=embedding_model,
+            index_name=index_name,
+            force_reload=force_reload
+        )
 
-    print("Vectorstore created with type: ", vectorstore_type)
-    
-    # Create retriever
-    retriever = vectorstore.as_retriever(
-        search_type="similarity_score_threshold",
-        search_kwargs={
-            "score_threshold": similarity_threshold,
-            "k": max_documents
-        }
-    )
-    
-    # Define prompt template
-    prompt = get_qa_prompt()
+        print("Vectorstore created with type: ", vectorstore_type)
+        
+        # Create retriever with vectorstore-specific configurations
+        if vectorstore_type == VectorStoreType.CHROMA:
+            retriever = vectorstore.as_retriever(
+                search_type="mmr",  # Use MMR for Chroma to ensure diversity
+                search_kwargs={
+                    "k": max_documents,
+                    "fetch_k": max_documents * 3,  # Fetch more candidates for MMR
+                    "lambda_mult": 0.7  # Diversity vs relevance trade-off
+                }
+            )
+        elif vectorstore_type == VectorStoreType.PINECONE:
+            retriever = vectorstore.as_retriever(
+                search_type="similarity",
+                search_kwargs={
+                    "k": max_documents,
+                    "score_threshold": similarity_threshold
+                }
+            )
+        else:  # IN_MEMORY and others
+            retriever = vectorstore.as_retriever(
+                search_type="similarity",
+                search_kwargs={
+                    "k": max_documents
+                }
+            )
+        
+        # Define prompt template
+        prompt = get_qa_prompt()
 
-    # Create the chain
-    llm = get_openai_chat_model(model_name=model_name, temperature=temperature)
-    question_answer_chain = create_stuff_documents_chain(llm, prompt)
-    return create_retrieval_chain(retriever, question_answer_chain)
+        # Create the chain
+        llm = get_openai_chat_model(model_name=model_name, temperature=temperature)
+        question_answer_chain = create_stuff_documents_chain(llm, prompt)
+        return create_retrieval_chain(retriever, question_answer_chain)
+    except Exception as e:
+        raise Exception(f"Error creating RAG chain: {str(e)}")

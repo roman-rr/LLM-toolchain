@@ -1,15 +1,17 @@
 from enum import Enum
-from typing import List, Optional
+from typing import List, Optional, Any
 from langchain_core.documents import Document
 
 from rag.embeddings import get_openai_embeddings
 from rag.vectorstores.in_memory import create_in_memory_vectorstore
 from rag.vectorstores.pinecone_store import setup_pinecone_vectorstore
+from rag.vectorstores.chromadb_store import setup_chromadb_vectorstore
 
 # Define an enum for vectorstore types
 class VectorStoreType(str, Enum):
     IN_MEMORY = "in_memory"
     PINECONE = "pinecone"
+    CHROMA = "chroma"
 
 def get_vectorstore(
     documents: List[Document], 
@@ -46,6 +48,12 @@ def get_vectorstore(
             embedding_model=embedding_model,
             index_name=index_name,
             force_reload=force_reload
+        )
+    elif vectorstore_type == VectorStoreType.CHROMA:
+        return setup_chromadb_vectorstore(
+            documents=documents,
+            embedding_model=embedding_model,
+            index_name=index_name
         )
     else:
         raise ValueError(f"Unsupported vectorstore type: {vectorstore_type}") 
