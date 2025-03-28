@@ -47,14 +47,16 @@ A comprehensive toolchain for Large Language Models (LLMs) built on LangChain, p
 ### Dev run server
 - `python -m api.main`
 
+## Docker FAST API
+### Local Run
+- `docker build --no-cache -t fastapi-app .`
+- `docker run -p 8000:8000 --env-file .env fastapi-app`
 
-## Application serverd at AWS python-functions
-
-### Usage
-- `arc sandbox`
-
-### Deploy
-Using architect arc.codes
-- `arc deploy`
-- `arc deploy production`
-
+## Terraform API deployments
+- `cd terraform`
+- `export $(cat ../.env | grep -v '^#' | xargs)`
+- `set -a; source ../.env; set +a`
+- `terraform init`
+- `terraform plan`
+- `terraform apply`
+- `./deploy.sh`

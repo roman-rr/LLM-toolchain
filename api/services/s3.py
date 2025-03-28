@@ -10,9 +10,9 @@ class S3Service:
     def __init__(self):
         self.s3_client = boto3.client(
             's3',
+            region_name=settings.aws_region,
             aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
-            aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
-            region_name=settings.AWS_REGION
+            aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY
         )
         self.bucket_name = settings.AWS_BUCKET_NAME
 

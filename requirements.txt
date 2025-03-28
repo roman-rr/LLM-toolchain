@@ -30,10 +30,9 @@ pydantic
 
 # Other dependencies
 tqdm
-psycopg2
 psycopg2-binary
 boto3
-unstructured[pdf]
+# unstructured[pdf] # This packaged bloob size to 6GB
 numpy
 protobuf
 pydantic-settings

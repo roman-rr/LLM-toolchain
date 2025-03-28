@@ -1,0 +1,27 @@
+# Ignore local environment and build artifacts
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.db
+*.sqlite3
+*.log
+
+# Ignore tooling, data, and Terraform files
+terraform/
+*.tf
+*.tfstate
+*.tfstate.*
+.terraform/
+*.jpg
+*.png
+*.jpeg
+data/
+docs/
+experiments/
+tests/
+
+# Ignore version control
+.git/
+.gitignore

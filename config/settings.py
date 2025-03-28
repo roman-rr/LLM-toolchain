@@ -43,6 +43,11 @@ class Settings(BaseSettings):
     # Chroma Configuration
     CHROMA_DB_PATH: str
     
+    @property
+    def aws_region(self) -> str:
+        # Strip any quotes from the region
+        return self.AWS_REGION.strip('"\'')
+
     class Config:
         env_file = ".env"
         case_sensitive = True
