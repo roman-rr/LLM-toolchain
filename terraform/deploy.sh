@@ -39,8 +39,9 @@ fi
 # Get configuration from Terraform outputs
 echo -e "${BLUE}📖 Reading Terraform outputs...${NC}"
 ECR_REPO=$(terraform output -raw ecr_repository_url)
+EC2_IP=$(terraform output -raw public_ip)
 if [ $? -ne 0 ]; then
-    echo "Failed to get ECR repository URL from Terraform. Have you run terraform apply?"
+    echo "Failed to get outputs from Terraform. Have you run terraform apply?"
     exit 1
 fi
 
@@ -54,7 +55,7 @@ echo -e "${BLUE}ℹ️  Using ECR repository: ${ECR_REPO}${NC}"
 echo -e "${BLUE}📦 Logging in to ECR...${NC}"
 aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${ECR_REPO%/*}
 
-# Build the Docker image (from parent directory where Dockerfile is)
+# Build the Docker image
 echo -e "${BLUE}🔨 Building Docker image...${NC}"
 cd ..
 docker build --no-cache -t ${APP_NAME} .
@@ -69,21 +70,6 @@ docker push ${ECR_REPO}:latest
 
 # Return to terraform directory
 cd terraform
-
-# Update ECS service to force new deployment
-echo -e "${BLUE}🔄 Forcing new deployment of ECS service...${NC}"
-aws ecs update-service \
-    --cluster ${APP_NAME}-cluster \
-    --service ${APP_NAME}-service \
-    --force-new-deployment \
-    --region ${AWS_REGION}
-
-echo -e "${GREEN}✅ Deployment completed successfully!${NC}"
-echo -e "${BLUE}ℹ️  The new version will be deployed automatically by ECS${NC}"
-
-# Get and display the ALB DNS name
-ALB_DNS=$(terraform output -raw alb_dns_name)
-echo -e "${GREEN}🌐 Your application is accessible at: http://${ALB_DNS}/api/v1/${NC}"
 
 # Function to update SSM parameter
 update_ssm_parameter() {
@@ -101,10 +87,8 @@ update_ssm_parameter() {
     fi
 }
 
-# After loading .env file
-echo -e "${BLUE}🔒 Updating AWS Systems Manager Parameters...${NC}"
-
 # Update all sensitive parameters
+echo -e "${BLUE}🔒 Updating AWS Systems Manager Parameters...${NC}"
 update_ssm_parameter "OPENAI_API_KEY" "${OPENAI_API_KEY}"
 update_ssm_parameter "PINECONE_API_KEY" "${PINECONE_API_KEY}"
 update_ssm_parameter "POSTGRES_URI" "${POSTGRES_URI}"
@@ -124,3 +108,6 @@ terraform apply \
   -var="serpapi_api_key=${SERPAPI_API_KEY}" \
   -var="langchain_api_key=${LANGCHAIN_API_KEY}" \
   -auto-approve
+
+echo -e "${GREEN}✅ Deployment completed successfully!${NC}"
+echo -e "${GREEN}🌐 Your application is accessible at: http://${EC2_IP}:8000/api/v1/${NC}"

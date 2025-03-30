@@ -1,3 +1,9 @@
+variable "project_name" {
+  description = "Project name to be used for resource naming"
+  type        = string
+  default     = "fastapi-ecs"  # You can change this default value
+} 
+
 variable "aws_region" {
   description = "AWS region"
   type        = string
@@ -60,6 +66,30 @@ variable "aws_access_key_id" {
 
 variable "aws_secret_access_key" {
   description = "AWS Secret Access Key"
+  type        = string
+  sensitive   = true
+}
+
+variable "aws_bucket_name" {
+  description = "AWS S3 Bucket Name"
+  type        = string
+  sensitive   = true
+}
+
+variable "langchain_endpoint" {
+  description = "LangChain Endpoint URL"
+  type        = string
+  sensitive   = true
+}
+
+variable "langchain_project" {
+  description = "LangChain Project Name"
+  type        = string
+  sensitive   = true
+}
+
+variable "chroma_db_path" {
+  description = "ChromaDB Path"
   type        = string
   sensitive   = true
 } 

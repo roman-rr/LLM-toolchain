@@ -1,0 +1,19 @@
+version: '3'
+services:
+  app:
+    image: ${ecr_repository_url}:latest
+    ports:
+      - "${container_port}:${container_port}"
+    environment:
+      - AWS_REGION=${aws_region}
+      - AWS_ACCESS_KEY_ID=${aws_access_key_id}
+      - AWS_SECRET_ACCESS_KEY=${aws_secret_access_key}
+      - AWS_BUCKET_NAME=${aws_bucket_name}
+      - OPENAI_API_KEY=${openai_api_key}
+      - PINECONE_API_KEY=${pinecone_api_key}
+      - POSTGRES_URI=${postgres_uri}
+      - SERPAPI_API_KEY=${serpapi_api_key}
+      - LANGCHAIN_API_KEY=${langchain_api_key}
+      - LANGCHAIN_ENDPOINT=${langchain_endpoint}
+      - LANGCHAIN_PROJECT=${langchain_project}
+      - CHROMA_DB_PATH=${chroma_db_path}

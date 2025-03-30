@@ -22,6 +22,7 @@ A comprehensive toolchain for Large Language Models (LLMs) built on LangChain, p
 - **Evaluations**: Comprehensive evaluation framework for assessing model performance
 
 ## Useful docs
+- Cookbook – https://github.com/langchain-ai/langsmith-cookbook/
 - Dashboard – https://smith.langchain.com/
 - Models – https://python.langchain.com/docs/integrations/chat/
 - Document loaders – https://python.langchain.com/docs/integrations/document_loaders/
@@ -49,14 +50,20 @@ A comprehensive toolchain for Large Language Models (LLMs) built on LangChain, p
 
 ## Docker FAST API
 ### Local Run
-- `docker build --no-cache -t fastapi-app .`
+- `docker build -t fastapi-app .`
 - `docker run -p 8000:8000 --env-file .env fastapi-app`
 
-## Terraform API deployments
+## Terraform API deployments to ec2 example
+
+### Create new aws ec2 infrastructure
 - `cd terraform`
 - `export $(cat ../.env | grep -v '^#' | xargs)`
 - `set -a; source ../.env; set +a`
 - `terraform init`
 - `terraform plan`
 - `terraform apply`
+- `./deploy.sh`
+
+### Update instance and redeploy
+- `terraform taint aws_instance.app`
 - `./deploy.sh`

@@ -32,8 +32,9 @@ pydantic
 tqdm
 psycopg2-binary
 boto3
-# unstructured[pdf] # This packaged bloob size to 6GB
+unstructured[pdf]
 numpy
 protobuf
 pydantic-settings
 google-search-results
+python-multipart
