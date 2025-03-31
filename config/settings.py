@@ -42,6 +42,9 @@ class Settings(BaseSettings):
     
     # Chroma Configuration
     CHROMA_DB_PATH: str
+
+    # API URL
+    API_URL: str
     
     @property
     def aws_region(self) -> str:

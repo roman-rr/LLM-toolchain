@@ -38,3 +38,6 @@ protobuf
 pydantic-settings
 google-search-results
 python-multipart
+
+streamlit
+requests

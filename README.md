@@ -48,6 +48,10 @@ A comprehensive toolchain for Large Language Models (LLMs) built on LangChain, p
 ### Dev run server
 - `python -m api.main`
 
+
+## Langsmith Feedback Dashboard 
+- `streamlit run frontend/app.py`
+
 ## Docker FAST API
 ### Local Run
 - `docker build -t fastapi-app .`
