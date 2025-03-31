@@ -20,6 +20,7 @@ A comprehensive toolchain for Large Language Models (LLMs) built on LangChain, p
 - **Chat History**: Persistent conversation history with multithreading support
 - **Experiments**: Integrated experiment tracking and evaluation using LangSmith
 - **Evaluations**: Comprehensive evaluation framework for assessing model performance
+- **LangSmith Feedback**: Interactive UI for rating and providing feedback on LLM interactions
 
 ## Useful docs
 - Cookbook – https://github.com/langchain-ai/langsmith-cookbook/
@@ -50,7 +51,18 @@ A comprehensive toolchain for Large Language Models (LLMs) built on LangChain, p
 
 
 ## Langsmith Feedback Dashboard 
-- `streamlit run frontend/app.py`
+_The feedback dashboard allows you to: View and select LangSmith projects, rate LLM interactions on a 1-5 scale, Add detailed comments for each interaction, track and analyze model performance_
+
+To run the feedback dashboard:
+```bash
+streamlit run frontend/app.py
+```
+
+## Jupyter
+### Open noterbook
+`- jupyter notebook`
+### Register kernel
+`- python -m ipykernel install --user --name=myenv`
 
 ## Docker FAST API
 ### Local Run

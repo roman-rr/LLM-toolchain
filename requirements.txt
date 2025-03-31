@@ -41,3 +41,4 @@ python-multipart
 
 streamlit
 requests
+jupyter
