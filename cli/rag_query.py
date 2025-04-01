@@ -40,6 +40,8 @@ def main():
                        help="Namespace for Pinecone vectorstore")
     parser.add_argument("--collection", type=str,
                        help="Collection name for Chroma vectorstore")
+    parser.add_argument("--persist_directory", type=str, default="./faiss_indexes",
+                        help="Directory to persist vector stores (for FAISS and Chroma)")
     
     # Parse arguments
     args = parser.parse_args()
@@ -98,6 +100,7 @@ def main():
             "force_reload": args.force_reload,
             "namespace": args.namespace,
             "collection_name": args.collection,
+            "persist_directory": args.persist_directory,
         }
         
         # Add source-specific parameters

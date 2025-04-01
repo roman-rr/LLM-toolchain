@@ -66,9 +66,27 @@ def setup_pinecone_vectorstore(
     
     # Add documents if provided
     if documents is not None:
-        namespace_info = f" in namespace '{namespace}'" if namespace else ""
-        print(f"Adding {len(documents)} documents to Pinecone{namespace_info}")
-        vectorstore.add_documents(documents)
+        if force_reload and namespace:
+            print(f"Deleting existing vectors in namespace: {namespace}")
+            pinecone_index.delete(delete_all=True, namespace=namespace)
+        elif documents:
+            # Get existing IDs
+            existing_ids = set()
+            query_response = pinecone_index.query(
+                vector=[0] * 1536,  # dummy vector
+                namespace=namespace,
+                top_k=10000,
+                include_metadata=True
+            )
+            for match in query_response.matches:
+                existing_ids.add(match.id)
+            
+            # Filter out existing documents
+            new_docs = [doc for doc in documents if doc.metadata.get('doc_id') not in existing_ids]
+            
+            if new_docs:
+                print(f"Adding {len(new_docs)} new documents to Pinecone{' in namespace ' + namespace if namespace else ''}")
+                vectorstore.add_documents(new_docs)
         
         # Verify documents were added
         stats = pinecone_index.describe_index_stats()

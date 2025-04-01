@@ -13,6 +13,7 @@ langchain_experimental
 langchain-pinecone
 chromadb
 langchain-chroma
+faiss-cpu
 
 # Document processing
 pypdf

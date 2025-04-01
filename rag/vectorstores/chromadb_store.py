@@ -45,11 +45,20 @@ def setup_chromadb_vectorstore(
         client=client,
         collection_name=collection_name,
         embedding_function=embedding_model,
+        ids=[doc.metadata.get('doc_id') for doc in documents] if documents else None
     )
     
     # Add documents if provided
     if documents:
-        print(f"Adding {len(documents)} documents to collection: {collection_name}")
-        vectorstore.add_documents(documents)
+        # Get existing IDs
+        existing_ids = set(vectorstore._collection.get()['ids'])
+        new_docs = [doc for doc in documents if doc.metadata.get('doc_id') not in existing_ids]
+        
+        if new_docs:
+            print(f"Adding {len(new_docs)} new documents to collection: {collection_name}")
+            vectorstore.add_documents(
+                new_docs,
+                ids=[doc.metadata.get('doc_id') for doc in new_docs]
+            )
         
     return vectorstore 

@@ -27,6 +27,7 @@ def create_chain(
     vectorstore_type: VectorStoreType = VectorStoreType.IN_MEMORY,
     force_reload: bool = False,
     chroma_db_path: str = "./chroma_db",
+    persist_directory: str = "./faiss_indexes",
     model_name: str = "gpt-4",
     temperature: float = 0.4,
     chunk_size: int = 1000,
@@ -66,6 +67,7 @@ def create_chain(
         namespace: Namespace for Pinecone
         collection_name: Collection name for Chroma
         vectorstore_type: Type of vectorstore to use
+        persist_directory: Path to store vectorstore files (for FAISS)
         chroma_db_path: Path to store Chroma database files (default: ./chroma_db)
         force_reload: Whether to force reload the index with new documents
         model_name: Name of the LLM model to use
@@ -171,8 +173,8 @@ def create_chain(
     # Load documents using the unified loader interface
     splits = get_loader(**kwargs)
     
-    # Validate that we have documents to process
-    if not splits or (isinstance(splits, list) and len(splits) == 0):
+    # Validate that we have documents to process (except for EMBEDDINGS source type)
+    if source_type != SourceType.EMBEDDINGS and (not splits or (isinstance(splits, list) and len(splits) == 0)):
         raise ValueError("No documents were loaded. Please check your source path and make sure the file exists and is not empty.")
     
     if isinstance(splits, list):
@@ -190,7 +192,8 @@ def create_chain(
             index_name=index_name,
             namespace=namespace,
             collection_name=collection_name,
-            force_reload=force_reload
+            force_reload=force_reload,
+            persist_directory=persist_directory
         )
 
         print(f"Vectorstore created with type: {vectorstore_type}")
@@ -214,6 +217,16 @@ def create_chain(
                 search_type="similarity",
                 search_kwargs={
                     "k": max_documents,
+                    "score_threshold": similarity_threshold
+                }
+            )
+        elif vectorstore_type == VectorStoreType.FAISS:
+            retriever = vectorstore.as_retriever(
+                search_type="mmr",
+                search_kwargs={
+                    "k": max_documents,
+                    "fetch_k": max_documents * 3,
+                    "lambda_mult": 0.7,
                     "score_threshold": similarity_threshold
                 }
             )

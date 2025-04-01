@@ -1,6 +1,7 @@
 from enum import Enum
 from typing import List, Optional, Any
 from langchain_core.documents import Document
+import os
 
 from rag.embeddings import get_openai_embeddings
 from rag.vectorstores.in_memory import create_in_memory_vectorstore
@@ -12,6 +13,7 @@ class VectorStoreType(str, Enum):
     IN_MEMORY = "in_memory"
     PINECONE = "pinecone"
     CHROMA = "chroma"
+    FAISS = "faiss"
 
 def get_vectorstore(
     documents: List[Document], 
@@ -20,7 +22,8 @@ def get_vectorstore(
     collection_name: Optional[str] = None,
     vectorstore_type: VectorStoreType = VectorStoreType.IN_MEMORY,
     index_name: str = "langchain-doc-embeddings",
-    force_reload: bool = False
+    force_reload: bool = False,
+    persist_directory: str = "./faiss_indexes"
 ):
     """
     Create or get a vectorstore based on the specified type
@@ -60,6 +63,15 @@ def get_vectorstore(
             namespace=namespace,
             collection_name=collection_name,
             index_name=index_name,
+            force_reload=force_reload
+        )
+    elif vectorstore_type == VectorStoreType.FAISS:
+        from rag.vectorstores.faiss_store import setup_faiss_vectorstore
+        return setup_faiss_vectorstore(
+            documents=documents,
+            embedding_model=embedding_model,
+            index_name=index_name,
+            persist_directory=persist_directory,
             force_reload=force_reload
         )
     else:

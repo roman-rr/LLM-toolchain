@@ -26,6 +26,7 @@ python -m cli.rag_query --source_type SOURCE_TYPE --vectorstore_type VECTOR_STOR
 | `IN_MEMORY` | In-memory vector store (default) | No additional configuration needed |
 | `PINECONE` | Pinecone vector database | Requires `PINECONE_API_KEY` environment variable |
 | `CHROMA` | Local Chroma vector database | Stores data in `CHROMA_DB_PATH` |
+| `FAISS` | Local FAISS vector store | Stores data in specified persist directory |
 
 ## All Available Options
 
@@ -130,3 +131,33 @@ Note: The `embeddings` source type is useful when you want to query existing vec
 python -m cli.rag_query --vectorstore_type chroma --source_type pdf --source_path ./data/raw/research.pdf --query "What research about?" \ --collection "user123_docs"
 
 ```
+
+### Using FAISS Vector Store
+
+```bash
+# Using FAISS with local persistence
+python -m cli.rag_query --vectorstore_type faiss \
+    --source_type pdf \
+    --source_path ./data/raw/research.pdf \
+    --index_name "langchain-doc-embeddings" \
+    --query "What is this research about?" \
+    --persist_directory "./faiss_indexes"
+
+# Query existing FAISS index without reloading documents
+python -m cli.rag_query --vectorstore_type faiss \
+    --source_type embeddings \
+    --query "Summarize the key findings" \
+    --index_name "langchain-doc-embeddings" \
+    --persist_directory "./faiss_indexes"
+
+# Force reload FAISS index with new documents
+python -m cli.rag_query --vectorstore_type faiss \
+    --source_type text_directory \
+    --source_path ./data/documents \
+    --query "What are the common themes?" \
+    --force_reload \
+    --index_name "langchain-doc-embeddings" \
+    --persist_directory "./faiss_indexes"
+```
+
+Note: FAISS stores its indexes locally in the specified persist directory. Each index is saved with its name and can be reused in subsequent queries unless `--force_reload` is specified. This makes it a great choice for local development and when you don't want to rely on external services.

@@ -1,5 +1,8 @@
 from enum import Enum
 from typing import List, Optional, Union, Any, Callable
+from hashlib import sha256
+import os
+from datetime import datetime
 
 from langchain_core.documents import Document
 
@@ -18,6 +21,26 @@ class SourceType(str, Enum):
     S3_DIRECTORY = "s3_directory"
     EMBEDDINGS = "embeddings"  # New source type for existing embeddings
 
+
+def generate_doc_id(content: str, source: str = "") -> str:
+    """Generate a unique document ID based on content and source"""
+    hash_input = f"{content}{source}".encode('utf-8')
+    return sha256(hash_input).hexdigest()
+
+def add_document_metadata(doc: Document, source_type: SourceType) -> Document:
+    """Add metadata to document including ID and source type"""
+    # Generate unique ID from content and source
+    doc_id = generate_doc_id(doc.page_content, doc.metadata.get('source', ''))
+    
+    # Add or update metadata
+    doc.metadata.update({
+        'doc_id': doc_id,
+        'source_type': source_type.value,
+        'title': os.path.basename(doc.metadata.get('source', 'unknown')),
+        'created_at': datetime.now().isoformat()
+    })
+    
+    return doc
 
 def get_loader(
     source_type: SourceType,
@@ -172,4 +195,13 @@ def get_loader(
         )
     
     else:
-        raise ValueError(f"Unsupported source type: {source_type}") 
+        raise ValueError(f"Unsupported source type: {source_type}")
+
+    # Load documents using the unified loader interface
+    splits = get_loader(**kwargs)
+    
+    # Add metadata to each document
+    if splits and isinstance(splits, list):
+        splits = [add_document_metadata(doc, source_type) for doc in splits]
+    
+    return splits 

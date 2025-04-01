@@ -16,7 +16,7 @@ A comprehensive toolchain for Large Language Models (LLMs) built on LangChain, p
 - **Tools & Actions**: Modular tools including search, calculator, weather, and custom capabilities
 - **Graphs & Workflows**: Agent orchestration and complex reasoning flows using LangGraph
 - **Fine Tuning Models**: Support for custom model fine-tuning and specialized chain creation
-- **Vector Database**: Support for Pinecone, ChromaDB, InMemoryVectorStore and other integrations
+- **Vector Database**: Support for Pinecone, ChromaDB, FAISS, InMemoryVectorStore and other integrations
 - **Chat History**: Persistent conversation history with multithreading support
 - **Experiments**: Integrated experiment tracking and evaluation using LangSmith
 - **Evaluations**: Comprehensive evaluation framework for assessing model performance

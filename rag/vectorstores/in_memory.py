@@ -25,5 +25,6 @@ def create_in_memory_vectorstore(
         
     return InMemoryVectorStore.from_documents(
         documents=documents,
-        embedding=embedding_model
+        embedding=embedding_model,
+        ids=[doc.metadata.get('doc_id') for doc in documents]
     ) 
