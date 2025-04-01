@@ -22,9 +22,26 @@ def create_in_memory_vectorstore(
     """
     if embedding_model is None:
         raise ValueError("embedding_model must be provided to create a vectorstore")
+    
+    # Create vectorstore
+    vectorstore = InMemoryVectorStore(embedding=embedding_model)
+    
+    if documents:
+        # Get existing document IDs if vectorstore already has documents
+        existing_ids = set()
+        if hasattr(vectorstore, '_docs'):
+            existing_ids = {doc.metadata.get('doc_id') for doc in vectorstore._docs}
         
-    return InMemoryVectorStore.from_documents(
-        documents=documents,
-        embedding=embedding_model,
-        ids=[doc.metadata.get('doc_id') for doc in documents]
-    ) 
+        # Filter out documents that already exist
+        new_docs = [doc for doc in documents if doc.metadata.get('doc_id') not in existing_ids]
+        
+        if new_docs:
+            print(f"Adding {len(new_docs)} new documents to in-memory vectorstore")
+            vectorstore.add_documents(
+                documents=new_docs,
+                ids=[doc.metadata.get('doc_id') for doc in new_docs]
+            )
+        else:
+            print("No new documents to add (all documents already exist)")
+            
+    return vectorstore 
